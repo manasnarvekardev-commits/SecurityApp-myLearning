@@ -25,6 +25,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    private String name;
 
 
     @Override
@@ -34,11 +35,11 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.email;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.password;
+        return this.email;
     }
 }
