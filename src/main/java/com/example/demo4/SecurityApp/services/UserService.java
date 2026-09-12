@@ -25,16 +25,21 @@ public class UserService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(()-> new ResourceNotFoundException("User with email: "+username+ " is not found!"));
+        return userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User with email: " + username + " is not found!"));
     }
 
-    public UserDTO signUp(SignUpDTO signUpDTO){
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id: " + userId + " is not found!"));
+    }
+
+    public UserDTO signUp(SignUpDTO signUpDTO) {
         Optional<User> user = userRepository.findByEmail(signUpDTO.getEmail());
 
-        if (user.isPresent()){
-            throw new BadCredentialsException("User with email already exists "+signUpDTO.getEmail());
+        if (user.isPresent()) {
+            throw new BadCredentialsException("User with email already exists " + signUpDTO.getEmail());
         }
 
         User toBeCreatedUser = modelMapper.map(signUpDTO, User.class);

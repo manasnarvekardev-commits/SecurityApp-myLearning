@@ -27,12 +27,12 @@ public class JwtService {
                 .claim("email", user.getEmail())
                 .claim("password", user.getPassword())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 10000+60))
+                .expiration(new Date(System.currentTimeMillis() + 10*60*1000))
                 .signWith(getSecretKey())
                 .compact();
     }
 
-    public long getUserIdFromToken(String token){
+    public Long getUserIdFromToken(String token){
         Claims claims=Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()

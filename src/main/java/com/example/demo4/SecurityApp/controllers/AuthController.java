@@ -5,6 +5,8 @@ import com.example.demo4.SecurityApp.dto.SignUpDTO;
 import com.example.demo4.SecurityApp.dto.UserDTO;
 import com.example.demo4.SecurityApp.services.AuthService;
 import com.example.demo4.SecurityApp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        String login = authService.login(loginDTO);
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response) {
+        String login = authService.login(loginDTO, request, response);
         return ResponseEntity.ok(login);
     }
 }

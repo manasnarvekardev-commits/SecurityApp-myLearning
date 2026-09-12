@@ -1,5 +1,7 @@
 package com.example.demo4.SecurityApp.config;
 
+import com.example.demo4.SecurityApp.filter.JWTAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,28 +15,30 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
+
+    private final JWTAuthFilter jwtAuthFilter;
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/posts","/auth/**").permitAll()
-                            .requestMatchers("/posts/**")
-                            .hasAnyRole("admin")
+//                            .requestMatchers("/posts/**")
+//                            .hasAnyRole("admin")
                             .anyRequest()
                             .authenticated();
                 })
-                .csrf(csrf->csrf.disable());
+                .csrf(csrf->csrf.disable())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 //                .formLogin(Customizer.withDefaults());
         return httpSecurity.build();
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
